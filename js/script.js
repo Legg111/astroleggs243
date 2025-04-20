@@ -1,3 +1,6 @@
+
+
+<script>
 document.addEventListener('DOMContentLoaded', function() {
     const passwordInput = document.getElementById('password');
     const loginBtn = document.getElementById('login-btn');
@@ -54,32 +57,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function checkPassword() {
         const password = passwordInput.value.trim();
+        const hashed = CryptoJS.SHA256(password).toString();
         loginBtn.style.transform = 'scale(0.95)';
         setTimeout(() => loginBtn.style.transform = 'scale(1)', 100);
-        switch (password) {
-            case 'терминал':
-                showTerminal();
-                break;
-            case '243delta':
-                grantAccess('protocols.html');
-                break;
-            case 'Голос9':
-                grantAccess('voice9.html');
-                break;
-            case 'ХетрМорван':
-                grantAccess('morvan.html');
-                break;
-            case 'антенныподкожей':
-                grantAccess('secret.html');
-                break;
-            case '7секунд':
-                startCountdown();
-                break;
-            case 'клеткапуста':
-                showQuote();
-                break;
-            default:
-                showError();
+
+        const accessMap = {
+            'b30b4c5ae3b152d5c0ac4c226baf35ae9ce3103f04d2e8f79d2be38308932c6e': 'protocols.html', // 243delta
+            'b4d6f26e7d84a4e20cc582b28c62789747b598e51e3fe5859f1e019f2060db59': 'voice9.html',     // Голос9
+            '8e9c42e810b52ce594fdce9e0e9e22fd9cc38e631580d5189bb805b5f4c65f40': 'morvan.html',      // ХетрМорван
+            '96f84287880187f68a60b04c4aa7d5d89b017cf01ce55cdb02851c9487b84a25': 'secret.html'       // антенныподкожей
+        };
+
+        const specialActions = {
+            '0a742d8787e68e54fbc251061cfb538df0a328dc90c6f2fd58c1c35437072f03': showTerminal, // терминал
+            'fb979c4691ac9787a2b34bb5412c0eea2a0fd515d3a931e26a75b08cf199ae89': startCountdown, // 7секунд
+            'd88bbf08b6813cf6172ac3ebbe5ff0d0e4e6f59306d308e61b33d16723c7fa77': showQuote        // клеткапуста
+        };
+
+        if (accessMap[hashed]) {
+            grantAccess(accessMap[hashed]);
+        } else if (specialActions[hashed]) {
+            specialActions[hashed]();
+        } else {
+            showError();
         }
     }
 
@@ -198,11 +198,12 @@ function createStars() {
             height: ${Math.random() * 3}px;
             background: #0f0;
             border-radius: 50%;
-            top: ${Math.random() * 100}%;
-            left: ${Math.random() * 100}%;
-            opacity: ${Math.random()};
+            top: ${Math.random() * 100}% ;
+            left: ${Math.random() * 100}% ;
+            opacity: ${Math.random()} ;
             animation: twinkle ${2 + Math.random() * 3}s infinite alternate;
         `;
         starsContainer.appendChild(star);
     }
 }
+</script>
