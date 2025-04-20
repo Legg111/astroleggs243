@@ -2,62 +2,231 @@
 <html lang="ru">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ФОНД АСТРОЛЕГГИ</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ФОНД АСТРОЛЕГГИ</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 
 <body>
-    <div class="scanlines"></div>
-    <div class="stars"></div>
+  <div class="scanlines"></div>
+  <div class="stars"></div>
 
-    <div class="container">
-        <header>
-            <div class="logo">
-                <div class="eye">
-                    <div class="antenna a1"></div>
-                    <div class="antenna a2"></div>
-                    <div class="antenna a3"></div>
-                    <div id="pupil" class="pupil"></div>
-                </div>
-                <h1>ФОНД АСТРОЛЕГГИ</h1>
-            </div>
-            <p class="classified">[ КЛАССИФИКАЦИЯ: ОГРАНИЧЕННЫЙ ДОСТУП // УРОВЕНЬ ДОПУСКА: Θ ]</p>
-        </header>
-
-        <main>
-            <div class="terminal">
-                <p class="blink">>_ Звёзды мертвы. Но кое-кто продолжает с ними говорить.</p>
-                <p>>_ Доступ разрешён только для уполномоченного персонала</p>
-
-                <div class="login-form">
-                    <label for="password">ВВЕДИТЕ ПАРОЛЬ:</label>
-                    <input type="password" id="password" class="password-input">
-                    <button id="login-btn">ПОДТВЕРДИТЬ</button>
-                </div>
-            </div>
-        </main>
-
-        <footer>
-            <p class="warning blink">ПРЕДУПРЕЖДЕНИЕ: Несанкционированный доступ приведёт к немедленной санации субъекта.</p>
-        </footer>
-    </div>
-
-    <div id="terminal-widget">
-        <div id="terminal-output"></div>
-        <div class="input-line">
-            <span>>_</span>
-            <input type="text" id="terminal-input" placeholder="Введите команду...">
+  <div class="container">
+    <header>
+      <div class="logo">
+        <div class="eye">
+          <div class="antenna a1"></div>
+          <div class="antenna a2"></div>
+          <div class="antenna a3"></div>
+          <div id="pupil" class="pupil"></div>
         </div>
+        <h1>ФОНД АСТРОЛЕГГИ</h1>
+      </div>
+      <p class="classified">[ КЛАССИФИКАЦИЯ: ОГРАНИЧЕННЫЙ ДОСТУП // УРОВЕНЬ ДОПУСКА: Θ ]</p>
+    </header>
+
+    <main>
+      <div class="terminal">
+        <p class="blink">>_ Звёзды мертвы. Но кое-кто продолжает с ними говорить.</p>
+        <p>>_ Доступ разрешён только для уполномоченного персонала</p>
+
+        <div class="login-form">
+          <label for="password">ВВЕДИТЕ ПАРОЛЬ:</label>
+          <input type="password" id="password" class="password-input" />
+          <button id="login-btn">ПОДТВЕРДИТЬ</button>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p class="warning blink">ПРЕДУПРЕЖДЕНИЕ: Несанкционированный доступ приведёт к немедленной санации субъекта.</p>
+    </footer>
+  </div>
+
+  <div id="terminal-widget">
+    <div id="terminal-output"></div>
+    <div class="input-line">
+      <span>>_</span>
+      <input type="text" id="terminal-input" placeholder="Введите команду..." />
     </div>
+  </div>
 
-    <audio id="error-sound" src="assets/audio/static.mp3" preload="auto"></audio>
-    <audio id="access-sound" src="assets/audio/access.mp3" preload="auto"></audio>
-    <audio id="terminal-sound" src="assets/audio/terminal.mp3" preload="auto"></audio>
+  <audio id="error-sound" src="assets/audio/static.mp3" preload="auto"></audio>
+  <audio id="access-sound" src="assets/audio/access.mp3" preload="auto"></audio>
+  <audio id="terminal-sound" src="assets/audio/terminal.mp3" preload="auto"></audio>
 
-    <script src="js/script.js"></script>
-    <script src="js/terminal.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const passwordInput = document.getElementById('password');
+      const loginBtn = document.getElementById('login-btn');
+      const accessSound = document.getElementById('access-sound');
+      const errorSound = document.getElementById('error-sound');
+      const pupil = document.getElementById('pupil');
+
+      const hashes = {
+        '3b47b75d70000b9c23ebdbf01e75ad3ff1f2a2efef8ec7dce73c66f1f261245d': 'protocols.html', // 243delta
+        'f31b91f91b38ad45f289802f4169d81f41b2450894385398d42159aeb5426d5d': 'voice9.html',   // Голос9
+        '21d8a6d070377d5b7b32e60a42a3cb7de32c7c2cfa61c5ebf5984a78738c9c61': 'morvan.html',   // ХетрМорван
+        '2db5ebcf1d5f3ae97c92d0f203db3ec5f031a6b1b98f8c2b1d7276d9619a1c5f': 'secret.html',   // антенныподкожей
+      };
+
+      loginBtn.addEventListener('click', checkPassword);
+      passwordInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') checkPassword();
+      });
+
+      function checkPassword() {
+        const input = passwordInput.value.trim();
+        const hash = CryptoJS.SHA256(input).toString();
+
+        if (input.toLowerCase() === 'терминал') {
+          showTerminal();
+        } else if (input === '7секунд') {
+          startCountdown();
+        } else if (input === 'клеткапуста') {
+          showQuote();
+        } else if (hashes[hash]) {
+          grantAccess(hashes[hash]);
+        } else {
+          showError();
+        }
+      }
+
+      function grantAccess(page) {
+        playSound(accessSound);
+        setTimeout(() => {
+          window.location.href = page;
+        }, 1000);
+      }
+
+      function showError() {
+        playSound(errorSound);
+        const terminal = document.querySelector('.terminal');
+        const errorMsg = document.createElement('p');
+        errorMsg.textContent = '>_ ОШИБКА ДОСТУПА. СООБЩЕНИЕ ЗАПИСАНО.';
+        errorMsg.style.color = '#f00';
+        terminal.appendChild(errorMsg);
+
+        document.body.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+          document.body.style.animation = '';
+          errorMsg.remove();
+        }, 3000);
+      }
+
+      function showTerminal() {
+        const terminalWidget = document.getElementById('terminal-widget');
+        const terminalOutput = document.getElementById('terminal-output');
+        const terminalInput = document.getElementById('terminal-input');
+        terminalWidget.style.display = 'block';
+        terminalInput.focus();
+        addTerminalOutput('> Терминал Фонда Астролегги активирован');
+        addTerminalOutput('> Введите "help" для списка команд');
+        playSound(accessSound);
+
+        const commands = {
+          help: () => addTerminalOutput('Команды: help, echo, clear'),
+          echo: () => addTerminalOutput('Эхо...'),
+          clear: () => (terminalOutput.innerHTML = '')
+        };
+
+        terminalInput.addEventListener('keypress', function (e) {
+          if (e.key === 'Enter') {
+            const cmd = this.value.trim().toLowerCase();
+            addTerminalOutput(`> ${cmd}`);
+            commands[cmd] ? commands[cmd]() : addTerminalOutput('Неизвестная команда.');
+            this.value = '';
+          }
+        });
+
+        function addTerminalOutput(text) {
+          const line = document.createElement('div');
+          terminalOutput.appendChild(line);
+          terminalOutput.scrollTop = terminalOutput.scrollHeight;
+          let i = 0;
+          function typeChar() {
+            if (i < text.length) {
+              line.textContent += text.charAt(i);
+              i++;
+              setTimeout(typeChar, 50);
+            }
+          }
+          typeChar();
+        }
+      }
+
+      function startCountdown() {
+        document.body.innerHTML = `<div class="terminal"><h1 class="blink" id="countdown">ОСТАЛОСЬ: 7 СЕКУНД</h1></div>`;
+        let count = 7;
+        const countdownElem = document.getElementById('countdown');
+        const timer = setInterval(() => {
+          count--;
+          countdownElem.textContent = `ОСТАЛОСЬ: ${count} СЕКУНД`;
+          if (count <= 0) {
+            clearInterval(timer);
+            document.body.style.backgroundColor = '#000';
+            document.body.innerHTML = '<p class="terminal">СУБЪЕКТ САНАЦИРОВАН.</p>';
+          }
+        }, 1000);
+      }
+
+      function showQuote() {
+        document.body.innerHTML = `
+          <div class="terminal">
+            <p class="glitch" data-text="Мы вскрыли небо и нашли под ним не бога, а клетку. Но клетка пуста. Или была?..">
+              Мы вскрыли небо и нашли под ним не бога, а клетку. Но клетка пуста. Или была?..</p>
+          </div>`;
+      }
+
+      function playSound(sound) {
+        if (!sound.paused) {
+          sound.currentTime = 0;
+        }
+        sound.play().catch(() => {});
+      }
+
+      document.addEventListener('mousemove', (event) => {
+        const mouseX = event.clientX;
+        const mouseY = event.clientY;
+        const eye = document.querySelector('.eye');
+        const eyeRect = eye.getBoundingClientRect();
+        const centerX = eyeRect.left + eyeRect.width / 2;
+        const centerY = eyeRect.top + eyeRect.height / 2;
+        const deltaX = mouseX - centerX;
+        const deltaY = mouseY - centerY;
+        const angle = Math.atan2(deltaY, deltaX);
+        const distance = Math.min(Math.sqrt(deltaX ** 2 + deltaY ** 2), 15);
+        const offsetX = distance * Math.cos(angle);
+        const offsetY = distance * Math.sin(angle);
+        if (pupil) pupil.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+      });
+
+      function createStars() {
+        const starsContainer = document.createElement('div');
+        starsContainer.className = 'stars';
+        document.body.appendChild(starsContainer);
+        for (let i = 0; i < 100; i++) {
+          const star = document.createElement('div');
+          star.style.cssText = `
+              position: absolute;
+              width: ${Math.random() * 3}px;
+              height: ${Math.random() * 3}px;
+              background: #0f0;
+              border-radius: 50%;
+              top: ${Math.random() * 100}%;
+              left: ${Math.random() * 100}%;
+              opacity: ${Math.random()};
+              animation: twinkle ${2 + Math.random() * 3}s infinite alternate;
+          `;
+          starsContainer.appendChild(star);
+        }
+      }
+
+      createStars();
+    });
+  </script>
 </body>
 
 </html>
