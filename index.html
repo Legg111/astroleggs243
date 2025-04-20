@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ФОНД АСТРОЛЕГГИ</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="scanlines"></div>
+    <div class="stars"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="eye">
+                    <div class="antenna a1"></div>
+                    <div class="antenna a2"></div>
+                    <div class="antenna a3"></div>
+                    <div id="pupil" class="pupil"></div>
+                </div>
+                <h1>ФОНД АСТРОЛЕГГИ</h1>
+            </div>
+            <p class="classified">[ КЛАССИФИКАЦИЯ: ОГРАНИЧЕННЫЙ ДОСТУП // УРОВЕНЬ ДОПУСКА: Θ ]</p>
+        </header>
+
+        <main>
+            <div class="terminal">
+                <p class="blink">>_ Звёзды мертвы. Но кое-кто продолжает с ними говорить.</p>
+                <p>>_ Доступ разрешён только для уполномоченного персонала</p>
+
+                <div class="login-form">
+                    <label for="password">ВВЕДИТЕ ПАРОЛЬ:</label>
+                    <input type="password" id="password" class="password-input">
+                    <button id="login-btn">ПОДТВЕРДИТЬ</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p class="warning blink">ПРЕДУПРЕЖДЕНИЕ: Несанкционированный доступ приведёт к немедленной санации субъекта.</p>
+        </footer>
+    </div>
+
+    <div id="terminal-widget">
+        <div id="terminal-output"></div>
+        <div class="input-line">
+            <span>>_</span>
+            <input type="text" id="terminal-input" placeholder="Введите команду...">
+        </div>
+    </div>
+
+    <audio id="error-sound" src="assets/audio/static.mp3" preload="auto"></audio>
+    <audio id="access-sound" src="assets/audio/access.mp3" preload="auto"></audio>
+    <audio id="terminal-sound" src="assets/audio/terminal.mp3" preload="auto"></audio>
+
+    <script src="js/script.js"></script>
+    <script src="js/terminal.js"></script>
+</body>
+
+</html>

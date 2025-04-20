@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Архив протоколов | ФОНД АСТРОЛЕГГИ</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Стили проводника */
+        .file-explorer {
+            display: flex;
+            height: 70vh;
+            border: 1px solid #0f0;
+            background: rgba(0, 10, 0, 0.2);
+        }
+        .sidebar {
+            width: 200px;
+            border-right: 1px dashed #0f0;
+            padding: 10px;
+        }
+        .files-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            cursor: pointer;
+            border-bottom: 1px solid #333;
+        }
+        .file-item:hover {
+            background: rgba(0, 255, 0, 0.1);
+        }
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%230f0"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6z"/></svg>') no-repeat;
+        }
+        .file-details {
+            flex: 1;
+        }
+        .file-name {
+            color: #0f0;
+        }
+        .file-date {
+            font-size: 0.8em;
+            color: #888;
+        }
+        .viewer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #f00;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="eye">
+                    <div class="antenna a1"></div>
+                    <div class="antenna a2"></div>
+                    <div class="antenna a3"></div>
+                    <div class="pupil"></div>
+                </div>
+                <h1>АРХИВ ПРОТОКОЛОВ СС-243</h1>
+            </div>
+            <p class="classified">[ КЛАССИФИКАЦИЯ: ОГРАНИЧЕННЫЙ ДОСТУП // УРОВЕНЬ ДОПУСКА: Θ ]</p>
+        </header>
+
+        <main>
+            <div class="terminal">
+                <div class="file-explorer">
+                    <div class="sidebar">
+                        <p>>_ Папки</p>
+                        <div id="folders">
+                            <div class="folder" data-folder="protocols">&gt; ПРОТОКОЛЫ</div>
+                            <div class="folder" data-folder="audios">&gt; АУДИОЗАПИСИ</div>
+                            <div class="folder" data-folder="dossier">&gt; ДОСЬЕ</div>
+                            <div class="folder" data-folder="sector">&gt; СЕКТОР Θ</div>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="files-container" id="files">
+                        <!-- Файлы будут добавлены через JS -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div id="file-viewer" class="viewer">
+            <span class="close-btn" onclick="closeViewer()">✖ ЗАКРЫТЬ</span>
+            <div id="viewer-content"></div>
+        </div>
+
+        <footer>
+            <p class="warning blink">ПРЕДУПРЕЖДЕНИЕ: Несанкционированное копирование файлов приведёт к санации.</p>
+        </footer>
+    </div>
+
+    <script src="js/protocols.js"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Голос №9 | ФОНД АСТРОЛЕГГИ</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        body {
+          background: #000;
+          color: #0f0;
+          font-family: 'Courier New', monospace;
+        }
+
+        .audio-player {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          background: rgba(0, 10, 0, 0.3);
+          border: 1px dashed #0f0;
+          padding: 20px;
+          margin-top: 20px;
+        }
+
+        .custom-audio {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+        }
+
+        .play-btn {
+          background: none;
+          border: 2px solid #0f0;
+          color: #0f0;
+          padding: 8px 16px;
+          font-size: 1.2em;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .play-btn:hover {
+          background: #0f0;
+          color: #000;
+        }
+
+        .progress-bar {
+          flex: 1;
+          background: #111;
+          border: 1px solid #0f0;
+          height: 10px;
+          border-radius: 5px;
+          overflow: hidden;
+          position: relative;
+        }
+
+        .progress {
+          height: 100%;
+          background: #0f0;
+          width: 0%;
+          transition: width 0.1s linear;
+        }
+
+        .time {
+          width: 70px;
+          text-align: right;
+          color: #0f0;
+          font-size: 0.9em;
+        }
+
+        .blink {
+          animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.3; }
+        }
+
+        .glitch {
+          color: #0f0;
+          text-shadow: 1px 0 red, -1px 0 blue;
+        }
+    </style>
+</head>
+<body>
+<div class="scanlines"></div>
+<div class="container">
+    <header>
+        <div class="logo">
+            <div class="eye">
+                <div class="antenna a1"></div>
+                <div class="antenna a2"></div>
+                <div class="antenna a3"></div>
+                <div class="pupil"></div>
+            </div>
+            <h1>ФОНД АСТРОЛЕГГИ</h1>
+        </div>
+        <p class="classified">[ КЛАССИФИКАЦИЯ: СОВЕРШЕННО СЕКРЕТНО // УРОВЕНЬ ДОПУСКА: Θ ]</p>
+    </header>
+
+    <main>
+        <div class="terminal">
+            <h2>>_ АРХИВ: ГОЛОС №9</h2>
+            <p class="warning blink">ВНИМАНИЕ: ПРОСЛУШИВАНИЕ БЕЗ ЭКРАНИРОВАННОЙ МАСКИ ЗАПРЕЩЕНО.</p>
+
+            <div class="audio-player">
+                <div class="custom-audio">
+                    <button class="play-btn" id="play">▶</button>
+                    <div class="progress-bar">
+                        <div class="progress" id="progress"></div>
+                    </div>
+                    <div class="time" id="time">00:00</div>
+                </div>
+                <p class="blink">Частота: 243.0 МГц</p>
+            </div>
+
+            <div class="transcript">
+                <h3>>_ ТРАНСКРИПЦИЯ (ФРАГМЕНТ):</h3>
+                <p class="glitch">"...не светила... врата...<br>он ждал... антенны...<br>клетка пуста..."</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p class="warning blink">ПРЕДУПРЕЖДЕНИЕ: При первых симптомах детрадации речи немедленно сообщите в Отдел Формации.</p>
+    </footer>
+</div>
+
+<!-- Аудио-элемент (скрыт) -->
+<audio id="voice9">
+    <source src="assets/audio/voice9.mp3" type="audio/mpeg" />
+    Ваш браузер не поддерживает аудио.
+</audio>
+
+<script>
+    const audio = document.getElementById('voice9');
+    const playBtn = document.getElementById('play');
+    const progress = document.getElementById('progress');
+    const timeDisplay = document.getElementById('time');
+
+    playBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play();
+        playBtn.textContent = '❚❚';
+      } else {
+        audio.pause();
+        playBtn.textContent = '▶';
+      }
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      const percent = (audio.currentTime / audio.duration) * 100;
+      progress.style.width = percent + '%';
+      const minutes = Math.floor(audio.currentTime / 60)
+          .toString()
+          .padStart(2, '0');
+      const seconds = Math.floor(audio.currentTime % 60)
+          .toString()
+          .padStart(2, '0');
+      timeDisplay.textContent = `${minutes}:${seconds}`;
+    });
+
+    audio.addEventListener('ended', () => {
+      playBtn.textContent = '▶';
+    });
+</script>
+</body>
+</html>
