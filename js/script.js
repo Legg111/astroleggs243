@@ -18,29 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.key === 'Enter') checkPassword();
     });
 
-    document.addEventListener('mousemove', (event) => {
-        const mouseX = event.clientX;
-        const mouseY = event.clientY;
 
-        const eye = document.querySelector('.eye');
-        const eyeRect = eye.getBoundingClientRect();
-
-        const eyeCenterX = eyeRect.left + eyeRect.width / 2;
-        const eyeCenterY = eyeRect.top + eyeRect.height / 2;
-
-        const deltaX = mouseX - eyeCenterX;
-        const deltaY = mouseY - eyeCenterY;
-
-        const angle = Math.atan2(deltaY, deltaX);
-
-        const distance = Math.min(Math.sqrt(deltaX * deltaX + deltaY * deltaY), 15);
-        const offsetX = distance * Math.cos(angle);
-        const offsetY = distance * Math.sin(angle);
-
-        if (pupil) {
-            pupil.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-        }
-    });
 
     const commandConstructor = {
         commands: {},
